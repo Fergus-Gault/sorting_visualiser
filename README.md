@@ -1,4 +1,4 @@
-A very simple sorting algorithm visualiser with an indicator of the current index being sorted.
+A very simple sorting algorithm visualiser using pygame with an indicator of the current index being sorted.
 Currently supported algorithms:
 1. MergeSort
 2. CountingSort
