@@ -9,8 +9,6 @@ GAP = .05
 DELAY = 10
 
 
-ALG = 3
-
 def __gen_arr():
     return [random.randint(1,100) for _ in range(100)]
 
