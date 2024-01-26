@@ -6,10 +6,13 @@ SCREEN_HEIGHT = 600
 
 GAP = .05
 
-DELAY = 100
+DELAY = 10
+
+
+ALG = 3
 
 def __gen_arr():
-    return [random.randint(1,100) for _ in range(10)]
+    return [random.randint(1,100) for _ in range(100)]
 
 def __render_bars(arr, c):
     bar_width = (SCREEN_WIDTH/len(arr)) - GAP
@@ -28,7 +31,7 @@ def __render_bars(arr, c):
     clock.tick(30)
     pygame.time.delay(DELAY)
     
-def __sort_arr(arr):
+def __insertsort(arr):
     sorted = False
     while sorted == False:
         for i in range(1, len(arr)):
@@ -42,7 +45,58 @@ def __sort_arr(arr):
             arr[j + 1] = key
             
         sorted = True
+        
+def __mergesort(arr):
+    sorted = False
+    while sorted == False:
+        if len(arr) > 1:
+            
+            mid =  len(arr)//2
+            L = arr[:mid]
+            R = arr[mid:]
+            __mergesort(L)
+            
+            __mergesort(R)
+            
+            i = j = k = 0
+            while i < len(L) and j < len(R):
+                if L[i] <= R[j]:
+                    __render_bars(arr, k)
+                    arr[k] = L[i]
+                    i += 1
+                else:
+                    __render_bars(arr, k)
+                    arr[k] = R[j]
+                    j += 1
+                k += 1
+            
+            while i < len(L):
+                __render_bars(arr, k)
+                arr[k] = L[i]
+                i += 1
+                k += 1
+            
+            while j < len(R):
+                __render_bars(arr, k)
+                arr[k] = R[j]
+                j += 1
+                k += 1
+        
+        __render_bars(arr, len(arr)-1)
+        sorted = True
 
+def __counting_sort(arr):
+    buckets = [[] for _ in range(max(arr)+ 1)]
+    for i in range(len(arr)):
+        buckets[arr[i]].append(arr[i])
+        
+    l = 0
+    for i in range(len(buckets)):
+        for j in range(len(buckets[i])):
+            arr[l] = buckets[i][j]
+            __render_bars(arr, l)
+            l += 1
+                       
 
 def __startup(arr):
     __render_bars(arr, 0)
@@ -58,8 +112,21 @@ def __update(arr):
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 running = False
                 break
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                __sort_arr(arr)
+            if event.type == pygame.KEYDOWN:
+                match event.key:
+                    case pygame.K_1:
+                        __mergesort(arr)
+                        break
+                    case pygame.K_2:
+                        __counting_sort(arr)
+                        break
+                    case pygame.K_3:
+                        __insertsort(arr)
+                        break
+                    case pygame.K_SPACE:
+                        arr = __gen_arr()
+                        __startup(arr)
+                        break
         clock.tick(30)
     
     pygame.quit()
